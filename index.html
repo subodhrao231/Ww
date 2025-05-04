@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kuldeep Rai IPL Live Stream</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>IPL Live Stream by Kuldeep Rai</title>
     <style>
         * {
             margin: 0;
@@ -14,46 +13,70 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0f0c29;
-            background: linear-gradient(to right, #24243e, #302b63, #0f0c29);
+            background: #000;
             color: white;
             min-height: 100vh;
+            overflow-x: hidden;
+            touch-action: manipulation;
         }
         
         .header {
-            background: rgba(0, 0, 0, 0.8);
-            padding: 20px 0;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 15px 0;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-            border-bottom: 2px solid #ff8a00;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #ff8a00;
         }
         
         .header h1 {
             margin: 0;
-            font-size: 2.2rem;
+            font-size: 1.8rem;
             background: linear-gradient(to right, #ff8a00, #e52e71);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 0 15px;
         }
         
         .container {
-            width: 95%;
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 0 10px;
+            width: 100%;
+            margin: 70px auto 0;
+            padding: 0;
+        }
+        
+        /* Theater Mode Styles */
+        .theater-mode {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 90;
+            background: #000;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .theater-mode .stream-container {
+            height: 100vh;
+            padding-top: 0;
+            border-radius: 0;
+            border: none;
         }
         
         .stream-container {
             position: relative;
             overflow: hidden;
             padding-top: 56.25%; /* 16:9 Aspect Ratio */
-            border-radius: 8px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
             background: #000;
-            border: 3px solid #333;
         }
         
         .stream-container iframe {
@@ -67,10 +90,9 @@
         
         .footer {
             text-align: center;
-            margin-top: 30px;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.7);
-            font-size: 0.9rem;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.9);
+            font-size: 0.8rem;
             color: #aaa;
             border-top: 1px solid #333;
         }
@@ -82,26 +104,69 @@
             transform: translate(-50%, -50%);
             color: #fff;
             font-size: 1.2rem;
+            z-index: 10;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.7);
+        }
+        
+        .btn {
+            background: linear-gradient(to right, #ff8a00, #e52e71);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            margin: 0 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9rem;
         }
         
         @media (max-width: 768px) {
             .header h1 {
-                font-size: 1.6rem;
-                padding: 0 10px;
+                font-size: 1.4rem;
             }
             
             .container {
-                margin: 15px auto;
+                margin-top: 60px;
+            }
+            
+            .btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
             }
         }
         
         @media (max-width: 480px) {
             .header h1 {
-                font-size: 1.4rem;
+                font-size: 1.2rem;
+            }
+            
+            .header {
+                padding: 10px 0;
+            }
+            
+            .btn {
+                padding: 5px 10px;
+                font-size: 0.7rem;
+            }
+        }
+        
+        @media (orientation: landscape) and (max-height: 500px) {
+            .header {
+                display: none;
+            }
+            
+            .container {
+                margin-top: 0;
             }
             
             .stream-container {
-                border-radius: 0;
+                padding-top: 100vh;
             }
         }
     </style>
@@ -111,11 +176,15 @@
         <h1>IPL Live Stream by Kuldeep Rai</h1>
     </div>
     
-    <div class="container">
+    <div class="container" id="main-container">
         <div class="stream-container">
-            <!-- Loading text will disappear when iframe loads -->
             <div class="loading">Loading Stream...</div>
             <iframe src="https://userrr4591.ifrem.net/iframe/frame.php" allow="autoplay; fullscreen" allowfullscreen></iframe>
+        </div>
+        
+        <div class="controls">
+            <button class="btn" id="theater-btn">Theater Mode</button>
+            <button class="btn" id="normal-btn" style="display:none;">Normal View</button>
         </div>
     </div>
     
@@ -128,6 +197,49 @@
         document.querySelector('iframe').addEventListener('load', function() {
             document.querySelector('.loading').style.display = 'none';
         });
+        
+        // Theater mode toggle
+        const theaterBtn = document.getElementById('theater-btn');
+        const normalBtn = document.getElementById('normal-btn');
+        const mainContainer = document.getElementById('main-container');
+        const streamContainer = document.querySelector('.stream-container');
+        
+        theaterBtn.addEventListener('click', function() {
+            mainContainer.classList.add('theater-mode');
+            theaterBtn.style.display = 'none';
+            normalBtn.style.display = 'block';
+            document.querySelector('.header').style.display = 'none';
+            document.querySelector('.footer').style.display = 'none';
+        });
+        
+        normalBtn.addEventListener('click', function() {
+            mainContainer.classList.remove('theater-mode');
+            theaterBtn.style.display = 'block';
+            normalBtn.style.display = 'none';
+            document.querySelector('.header').style.display = 'block';
+            document.querySelector('.footer').style.display = 'block';
+        });
+        
+        // Disable zooming
+        document.addEventListener('gesturestart', function(e) {
+            e.preventDefault();
+        });
+        
+        // Handle mobile landscape mode
+        function handleOrientation() {
+            if (window.matchMedia("(orientation: landscape)").matches && window.innerHeight < 500) {
+                document.querySelector('.header').style.display = 'none';
+                document.querySelector('.footer').style.display = 'none';
+                document.querySelector('.controls').style.display = 'none';
+            } else {
+                document.querySelector('.header').style.display = 'block';
+                document.querySelector('.footer').style.display = 'block';
+                document.querySelector('.controls').style.display = 'flex';
+            }
+        }
+        
+        window.addEventListener('resize', handleOrientation);
+        handleOrientation();
     </script>
 </body>
 </html>
