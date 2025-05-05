@@ -121,22 +121,23 @@
         <h1>IPL 2025 LIVE STREAM</h1>
     </div>
     
-    <div class="video-wrapper">
-        <iframe 
-            id="video-iframe"
-            src="https://ipladjustble.pages.dev/" 
-            frameborder="0"
-            allow="autoplay; fullscreen; accelerometer; gyroscope"
-            allowfullscreen
-            title="Live IPL Streaming"
-            scrolling="no"
-            sandbox="allow-scripts allow-same-origin allow-presentation">
-        </iframe>
-    </div>
-    
-    <div class="controls">
-        <button class="btn-fullscreen" onclick="toggleFullscreen()">FULLSCREEN</button>
-    </div>
+        <div style="width: 100%; max-width: 100%; margin: auto; padding: 10px;">
+  <div id="video-container" style="position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px;">
+    <iframe 
+      id="live-video" 
+      src="https://ipladjustble.pages.dev/" 
+      frameborder="0" 
+      allowfullscreen 
+      allow="fullscreen"
+      title="Live IPL Stream"
+      style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;">
+    </iframe>
+  </div>
+
+  <button onclick="goFullscreen()" style="margin-top: 15px; padding: 10px 20px; background-color: #000; color: #fff; border: none; border-radius: 5px; font-weight: bold; display: block; width: 100%; max-width: 300px; margin-left: auto; margin-right: auto;">
+    Fullscreen
+  </button>
+</div>
     
     <div class="footer">
         <p>© 2025 IPL Live Stream</p>
