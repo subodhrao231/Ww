@@ -3,8 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta http-equiv="X-Frame-Options" content="DENY">
-    <meta http-equiv="Content-Security-Policy" content="frame-src https://userrr4591.ifrem.net; child-src 'none';">
     <title>Premium Live Stream</title>
     <style>
         :root {
@@ -32,7 +30,6 @@
             -webkit-font-smoothing: antialiased;
         }
         
-        /* Header with left logo */
         .magic-header {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             padding: 0.8rem 1rem;
@@ -48,6 +45,7 @@
             display: flex;
             align-items: center;
             text-decoration: none;
+            color: inherit;
         }
         
         .logo-img {
@@ -61,24 +59,20 @@
             letter-spacing: 0.5px;
             background: linear-gradient(to right, #fff 20%, var(--accent) 40%, var(--accent) 60%, #fff 80%);
             background-size: 200% auto;
-            color: #000;
             background-clip: text;
             -webkit-background-clip: text;
-            text-fill-color: transparent;
-            -webkit-text-fill-color: transparent;
+            color: transparent;
             animation: shine 3s linear infinite;
         }
         
-        /* Secure iframe container */
-        .secure-video-container {
+        .video-container {
             position: relative;
             width: 100%;
             padding-top: 56.25%;
-            overflow: hidden;
             background: #000;
         }
         
-        .secure-video-container iframe {
+        .video-iframe {
             position: absolute;
             top: 0;
             left: 0;
@@ -87,7 +81,23 @@
             border: none;
         }
         
-        /* Content section */
+        .fallback-message {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            z-index: 10;
+        }
+        
         .content-section {
             padding: 1rem;
             background: rgba(15, 23, 42, 0.9);
@@ -96,21 +106,6 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
         
-        .content-section h2 {
-            color: var(--accent);
-            font-size: 1rem;
-            font-weight: 700;
-            margin-bottom: 0.6rem;
-        }
-        
-        .content-section p {
-            font-size: 0.8rem;
-            font-weight: 400;
-            margin-bottom: 0.6rem;
-            line-height: 1.5;
-        }
-        
-        /* Footer */
         .magic-footer {
             background: linear-gradient(135deg, var(--dark), #1e293b);
             padding: 1rem;
@@ -118,110 +113,122 @@
             border-top: 1px solid rgba(255, 255, 255, 0.08);
         }
         
-        .copyright {
-            font-size: 0.7rem;
-            opacity: 0.6;
-            font-weight: 400;
-        }
-        
-        /* Animations */
         @keyframes shine {
             to { background-position: 200% center; }
-        }
-        
-        /* Mobile optimizations */
-        @media (max-width: 480px) {
-            .logo-text {
-                font-size: 1.1rem;
-            }
-            
-            .logo-img {
-                height: 25px;
-            }
-            
-            .content-section {
-                padding: 0.8rem;
-                margin: 0.5rem;
-            }
-            
-            .content-section h2 {
-                font-size: 0.95rem;
-            }
-            
-            .content-section p {
-                font-size: 0.78rem;
-            }
         }
     </style>
 </head>
 <body>
-    <!-- Header with left logo -->
     <header class="magic-header">
         <a href="#" class="header-logo">
-            <!-- Replace with your logo -->
             <img src="https://i.ibb.co/Jw27qnL0/file-1.jpg" alt="Logo" class="logo-img">
-            <div class="logo-text">Kuldeep Rai</div>
+            <div class="logo-text">Kuldeep TV</div>
         </a>
     </header>
-    <!-- Video container with fallback -->
+    
     <div class="video-container">
         <iframe src="https://userrr4591.ifrem.net/iframe/frame.php" 
                 class="video-iframe"
                 allowfullscreen
-                id="videoFrame"></iframe>
+                id="videoFrame"
+                sandbox="allow-same-origin allow-scripts"></iframe>
+        
+        <div class="fallback-message" id="fallbackMessage">
+            <h3>Video Loading Issue</h3>
+            <p>If the video doesn't appear, please try these steps:</p>
+            <ol style="text-align: left; margin: 10px 0;">
+                <li>Refresh the page</li>
+                <li>Check your internet connection</li>
+                <li>Try a different browser</li>
+            </ol>
+            <button onclick="reloadVideo()" style="
+                background: var(--accent);
+                color: white;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 4px;
+                margin-top: 10px;
+                cursor: pointer;
+            ">Retry Loading Video</button>
+        </div>
     </div>
     
-    <!-- Content section -->
     <div class="content-section">
         <h2>Live Streaming</h2>
-        <p>Enjoy our premium live stream with complete security. All external links are disabled for your protection.</p>
+        <p>Enjoy our premium live stream with complete security.</p>
     </div>
     
-    <!-- Footer -->
     <footer class="magic-footer">
         <div class="copyright">
-            &copy; 2023 Secure Stream. All rights reserved.
+            &copy; @ 2025 Secure Stream. All rights reserved.
         </div>
     </footer>
 
-    <!-- Security scripts without window.open override -->
     <script>
-        // Strict iframe security
-        document.getElementById('secureFrame').addEventListener('load', function() {
-            // Block all links within iframe
+        // Popunder ad blocking
+        window.blur = function() {};
+        window.open = function() { return window; };
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Block iframe popunders
+            const iframes = document.getElementsByTagName('iframe');
+            for (let i = 0; i < iframes.length; i++) {
+                try {
+                    iframes[i].contentWindow.open = function() { return window; };
+                    iframes[i].contentWindow.blur = function() {};
+                } catch(e) {
+                    // Cross-origin iframe
+                }
+            }
+        });
+
+        // Video loading check
+        const videoFrame = document.getElementById('videoFrame');
+        const fallbackMessage = document.getElementById('fallbackMessage');
+        
+        setTimeout(() => {
             try {
-                var iframeDoc = this.contentDocument || this.contentWindow.document;
-                iframeDoc.addEventListener('click', function(e) {
-                    if (e.target.tagName === 'A' || e.target.closest('a')) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        return false;
-                    }
-                }, true);
-                
-                // Prevent any form submissions
-                iframeDoc.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    return false;
-                }, true);
-            } catch(e) {
-                // Cross-origin error handling
-                console.log('Security policies active');
+                if (videoFrame.contentDocument && 
+                    videoFrame.contentDocument.body && 
+                    (videoFrame.contentDocument.body.innerText.includes('blocked') || 
+                     videoFrame.contentDocument.body.innerText.includes('ad'))) {
+                    showFallback();
+                }
+            } catch (e) {
+                // Cross-origin iframe - check visibility
+                if (videoFrame.offsetHeight === 0 || 
+                    videoFrame.style.display === 'none') {
+                    showFallback();
+                }
+            }
+        }, 3000);
+        
+        videoFrame.addEventListener('load', () => {
+            try {
+                if (videoFrame.contentDocument.body.innerText.includes('blocked')) {
+                    showFallback();
+                }
+            } catch (e) {
+                // Iframe loaded successfully
+                hideFallback();
             }
         });
-
-        // Prevent navigation
-        window.addEventListener('beforeunload', function(e) {
-            // Only prevent if not initiated by user
-            if (!e.defaultPrevented && e.type === 'beforeunload') {
-                e.preventDefault();
-                e.returnValue = '';
-            }
-        });
-
-        // Block frame busting
-        if (window.top !== window.self) {
-            window.top.location = window.self.location;
+        
+        videoFrame.addEventListener('error', showFallback);
+        
+        function showFallback() {
+            fallbackMessage.style.display = 'flex';
+            videoFrame.style.display = 'none';
+        }
+        
+        function hideFallback() {
+            fallbackMessage.style.display = 'none';
+            videoFrame.style.display = 'block';
+        }
+        
+        function reloadVideo() {
+            videoFrame.src = videoFrame.src;
+            hideFallback();
         }
     </script>
 </body>
