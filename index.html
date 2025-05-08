@@ -2,196 +2,174 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>IPL 2025 Live Stream By Kuldeep Babu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Video Stream</title>
     <style>
+        :root {
+            --primary-color: #4285f4;
+            --secondary-color: #34a853;
+            --accent-color: #ea4335;
+            --text-color: #333;
+            --light-bg: #f9f9f9;
+            --dark-bg: #202124;
+        }
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            touch-action: manipulation;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: #000;
-            color: #fff;
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            line-height: 1.6;
             display: flex;
             flex-direction: column;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            min-height: 100vh;
         }
         
-        .header {
-            padding: 12px 15px;
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
             text-align: center;
-            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-            flex-shrink: 0;
-            z-index: 10;
+            padding: 2rem 1rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         
-        .header h1 {
-            font-size: clamp(16px, 5vw, 22px);
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
         }
         
-        .video-wrapper {
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
             flex: 1;
-            min-height: 0;
-            position: relative;
-            background: #000;
+            width: 100%;
         }
         
-        #video-iframe {
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            background-color: var(--dark-bg);
+            margin-bottom: 2rem;
+        }
+        
+        .video-container iframe {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             border: none;
-            display: block;
         }
         
-        .controls {
-            padding: 10px 15px;
-            text-align: center;
-            background: #111;
-            flex-shrink: 0;
+        .video-info {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
         }
         
-        .btn-fullscreen {
-            background: #e63946;
+        footer {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
             color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-size: clamp(14px, 4vw, 16px);
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s;
-            width: 100%;
-            max-width: 200px;
-        }
-        
-        .btn-fullscreen:active {
-            transform: scale(0.95);
-        }
-        
-        .footer {
-            padding: 8px;
             text-align: center;
-            font-size: 10px;
-            color: #666;
-            background: #000;
-            flex-shrink: 0;
+            padding: 1.5rem;
+            margin-top: auto;
         }
         
-        /* Portrait mode specific adjustments */
-        @media (orientation: portrait) {
-            .header {
-                padding: 10px;
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            transition: transform 0.3s;
+        }
+        
+        .social-links a:hover {
+            transform: translateY(-3px);
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
             }
-            .header h1 {
-                font-size: clamp(14px, 4vw, 18px);
+            
+            .subtitle {
+                font-size: 1rem;
             }
-            .btn-fullscreen {
-                padding: 8px 15px;
-                max-width: 160px;
+            
+            .container {
+                margin: 1rem auto;
+                padding: 0 0.8rem;
+            }
+            
+            .video-info {
+                padding: 1rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>IPL 2025 LIVE STREAM</h1>
+    <header>
+        <h1>Today Ipl Match </h1>
+        <p class="subtitle">My Self Kuldeep Rai < Contact No 9555158536 ></p>
+    </header>
+    
+    <div class="container">
+        <div class="video-container">
+            <!-- Replace with your actual video embed code -->
+            <iframe src="https://userrr4591.ifrem.net/iframe/frame.php" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen></iframe>
+        </div>
+        
+        <div class="video-info">
+            <h2>About This Stream</h2>
+            <p>This is our live broadcast channel. The stream is available scheduled programming and special live events.</p>
+            <p>Check back regularly for updates and upcoming events. Don't forget to like and subscribe for notifications when we go live!</p>
+        </div>
     </div>
     
-        <div style="width: 100%; max-width: 100%; margin: auto; padding: 10px;">
-  <div id="video-container" style="position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px;">
-    <iframe 
-      id="live-video" 
-      src="https://userrr4591.ifrem.net/iframe/frame.php" 
-      frameborder="0" 
-      allowfullscreen 
-      allow="fullscreen"
-      title="Live IPL Stream"
-      style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;">
-    </iframe>
-  </div>
-
-  <button onclick="goFullscreen()" style="margin-top: 15px; padding: 10px 20px; background-color: #000; color: #fff; border: none; border-radius: 5px; font-weight: bold; display: block; width: 100%; max-width: 300px; margin-left: auto; margin-right: auto;">
-    Fullscreen
-  </button>
-</div>
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2025 Stream Flix Pro. All rights reserved.</p>
+            <div class="social-links">
+                <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+    </footer>
     
-    <div class="footer">
-        <p>© 2025 Kuldeep Babu ! all right IPL Live Stream</p>
-    </div>
-
-    <script>
-        // Prevent any scrolling or zooming
-        function preventDefault(e) {
-            e.preventDefault();
-        }
-        
-        document.addEventListener('touchmove', preventDefault, { passive: false });
-        document.addEventListener('gesturestart', preventDefault);
-        
-        // Fullscreen toggle
-        function toggleFullscreen() {
-            const elem = document.getElementById('video-iframe');
-            if (!document.fullscreenElement) {
-                if (elem.requestFullscreen) {
-                    elem.requestFullscreen();
-                } else if (elem.webkitRequestFullscreen) {
-                    elem.webkitRequestFullscreen();
-                } else if (elem.msRequestFullscreen) {
-                    elem.msRequestFullscreen();
-                }
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                } else if (document.msExitFullscreen) {
-                    document.msExitFullscreen();
-                }
-            }
-        }
-        
-        // Force portrait mode on mobile
-        function lockOrientation() {
-            if (screen.orientation && screen.orientation.lock) {
-                screen.orientation.lock('portrait').catch(() => {});
-            } else if (window.screen.lockOrientation) {
-                window.screen.lockOrientation('portrait');
-            }
-        }
-        
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            lockOrientation();
-            // Additional anti-popup measures
-            window.open = function(){ return false; };
-            window.alert = function(){ return false; };
-            window.confirm = function(){ return false; };
-            window.prompt = function(){ return false; };
-        });
-    </script>
+    <!-- Font Awesome for icons (optional) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </body>
 </html>
