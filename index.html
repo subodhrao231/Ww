@@ -112,18 +112,87 @@
         
         .social-links {
             display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
         }
         
-        .social-links a {
+        .social-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
             color: white;
-            font-size: 1.5rem;
             transition: transform 0.3s;
         }
         
-        .social-links a:hover {
-            transform: translateY(-3px);
+        .social-link:hover {
+            transform: translateY(-5px);
+        }
+        
+        .social-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .social-text {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        /* Follow modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 90%;
+            width: 400px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+        
+        .modal-title {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .modal-btn {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 1rem;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        
+        .modal-btn:hover {
+            background: var(--secondary-color);
         }
         
         /* Loading spinner */
@@ -162,6 +231,14 @@
             
             .video-info {
                 padding: 1rem;
+            }
+            
+            .social-links {
+                gap: 1rem;
+            }
+            
+            .social-icon {
+                font-size: 1.8rem;
             }
         }
     </style>
@@ -214,15 +291,34 @@
     
     <footer>
         <div class="footer-content">
-            <p>&copy; 2023 IPL Live Streaming. All rights reserved.</p>
+            <p>&copy; 2025 IPL Live Streaming. All rights reserved.</p>
             <div class="social-links">
-                <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
-                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                <a href="#" class="social-link" onclick="showFollowModal('Instagram', 'https://www.instagram.com/itz_kuldeep_rai_007/')">
+                    <i class="fab fa-instagram social-icon"></i>
+                    <span class="social-text">Follow Us</span>
+                </a>
+                <a href="#" class="social-link" onclick="showFollowModal('Facebook', 'https://www.facebook.com/profile.php?id=100088420601404')">
+                    <i class="fab fa-facebook social-icon"></i>
+                    <span class="social-text">Like Our Page</span>
+                </a>
+                <a href="#" class="social-link" onclick="showFollowModal('YouTube', 'https://www.youtube.com/@StreamFlixPro')">
+                    <i class="fab fa-youtube social-icon"></i>
+                    <span class="social-text">Subscribe</span>
+                </a>
             </div>
         </div>
     </footer>
+    
+    <!-- Follow Modal -->
+    <div class="modal" id="followModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h3 class="modal-title" id="modalTitle">Follow Us on Instagram</h3>
+            <p>Please follow/subscribe to our channel for more live matches and updates!</p>
+            <a href="#" class="modal-btn" id="modalLink" target="_blank">Continue to Platform</a>
+            <p style="margin-top: 1rem; font-size: 0.9rem;">You'll be redirected to our official page</p>
+        </div>
+    </div>
     
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -253,6 +349,40 @@
             document.getElementById('fallbackPlayer').style.display = 'block';
             document.getElementById('loader').style.display = 'none';
         }
+        
+        // Follow modal functions
+        function showFollowModal(platform, url) {
+            event.preventDefault();
+            const modal = document.getElementById('followModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalLink = document.getElementById('modalLink');
+            
+            // Set modal content based on platform
+            modalTitle.textContent = `Follow Us on ${platform}`;
+            modalLink.textContent = platform === 'YouTube' ? 'Subscribe on YouTube' : `Follow on ${platform}`;
+            modalLink.href = url;
+            
+            // Show modal
+            modal.style.display = 'flex';
+            
+            // Add click event to continue button
+            modalLink.addEventListener('click', function() {
+                // Track the click if needed
+                console.log(`User clicked to follow on ${platform}`);
+            });
+        }
+        
+        function closeModal() {
+            document.getElementById('followModal').style.display = 'none';
+        }
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('followModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
         
         // Another fallback for very old browsers
         if (!('Promise' in window)) {
