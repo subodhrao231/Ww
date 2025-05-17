@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Video Stream</title>
+    <title>Live IPL Match Streaming</title>
     <style>
         :root {
             --primary-color: #4285f4;
@@ -67,13 +67,24 @@
             margin-bottom: 2rem;
         }
         
-        .video-container iframe {
+        .video-container iframe,
+        .video-container video {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             border: none;
+        }
+        
+        /* Fallback video player styles */
+        .fallback-player {
+            display: none;
+            width: 100%;
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 20px;
         }
         
         .video-info {
@@ -115,6 +126,26 @@
             transform: translateY(-3px);
         }
         
+        /* Loading spinner */
+        .loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+        
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
         @media (max-width: 768px) {
             h1 {
                 font-size: 1.8rem;
@@ -137,29 +168,53 @@
 </head>
 <body>
     <header>
-        <h1>Today Ipl Match </h1>
-        <p class="subtitle">My Self Kuldeep Rai < Contact No 9555158536 ></p>
+        <h1>Today's IPL Match Live</h1>
+        <p class="subtitle">Streaming provided by Kuldeep Rai | Contact: 9555158536</p>
     </header>
     
     <div class="container">
         <div class="video-container">
-            <!-- Replace with your actual video embed code -->
-            <iframe src="https://userrr4591.ifrem.net/iframe/frame.php" 
+            <!-- Loading spinner -->
+            <div class="loader" id="loader"></div>
+            
+            <!-- Primary video embed with multiple fallback options -->
+            <iframe id="mainVideo" src="https://userrr4591.ifrem.net/iframe/frame.php" 
                     frameborder="0" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen></iframe>
+                    allowfullscreen
+                    onerror="fallbackToAlternative()"></iframe>
+            
+            <!-- Fallback video player -->
+            <div id="fallbackPlayer" class="fallback-player">
+                <h3>Alternative Streaming Options</h3>
+                <p>If the video doesn't load, please try one of these options:</p>
+                <div style="margin: 20px 0;">
+                    <a href="https://userrr4591.ifrem.net/iframe/frame.php" style="display: inline-block; background: var(--primary-color); color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; margin: 5px;">
+                        Open in External Player
+                    </a>
+                    <a href="videos://userrr4591.ifrem.net/iframe/frame.php" style="display: inline-block; background: var(--secondary-color); color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; margin: 5px;">
+                        Try Native Player
+                    </a>
+                </div>
+                <p>For best experience, use Chrome or Firefox browser</p>
+            </div>
         </div>
         
         <div class="video-info">
             <h2>About This Stream</h2>
-            <p>This is our live broadcast channel. The stream is available scheduled programming and special live events.</p>
-            <p>Check back regularly for updates and upcoming events. Don't forget to like and subscribe for notifications when we go live!</p>
+            <p>Watch today's IPL match live with high-quality streaming. If you experience any issues, try refreshing the page or using a different browser.</p>
+            <p>For optimal performance on Android devices:</p>
+            <ul style="margin: 10px 0 10px 20px;">
+                <li>Use Chrome or Firefox browser</li>
+                <li>Ensure you have a stable internet connection</li>
+                <li>Disable any ad-blockers if the stream doesn't load</li>
+            </ul>
         </div>
     </div>
     
     <footer>
         <div class="footer-content">
-            <p>&copy; 2025 Stream Flix Pro. All rights reserved.</p>
+            <p>&copy; 2023 IPL Live Streaming. All rights reserved.</p>
             <div class="social-links">
                 <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
                 <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
@@ -169,7 +224,40 @@
         </div>
     </footer>
     
-    <!-- Font Awesome for icons (optional) -->
+    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <script>
+        // Show loader when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            const loader = document.getElementById('loader');
+            loader.style.display = 'block';
+            
+            // Check if iframe loaded successfully
+            document.getElementById('mainVideo').addEventListener('load', function() {
+                loader.style.display = 'none';
+            });
+            
+            // Fallback check after 8 seconds
+            setTimeout(function() {
+                const iframe = document.getElementById('mainVideo');
+                // Very simple check - if iframe has no height, it probably didn't load
+                if (iframe.clientHeight === 0) {
+                    fallbackToAlternative();
+                }
+            }, 8000);
+        });
+        
+        function fallbackToAlternative() {
+            document.getElementById('mainVideo').style.display = 'none';
+            document.getElementById('fallbackPlayer').style.display = 'block';
+            document.getElementById('loader').style.display = 'none';
+        }
+        
+        // Another fallback for very old browsers
+        if (!('Promise' in window)) {
+            fallbackToAlternative();
+        }
+    </script>
 </body>
 </html>
