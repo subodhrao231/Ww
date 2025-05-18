@@ -2,229 +2,584 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta http-equiv="X-Frame-Options" content="DENY">
-    <meta http-equiv="Content-Security-Policy" content="frame-src https://userrr4591.ifrem.net; child-src 'none';">
-    <title>Premium Live Stream</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie & Series Post Generator</title>
     <style>
-        :root {
-            --primary: #113ccf;
-            --secondary: #d82d8e;
-            --accent: #ff9e40;
-            --dark: #0f172a;
-            --light: #f8fafc;
-            --text: #e2e8f0;
-        }
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
+            /* Disable text selection */
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
-        
+
+        :root {
+            /* Dark Mode */
+            --bg-dark: linear-gradient(135deg, #1e1e2f, #2a2a4a, #3b3b5f);
+            --container-dark: rgba(40, 40, 60, 0.9);
+            --text-dark: #e0e0e0;
+            --accent-dark: #ff4e7e;
+            --btn-dark-1: linear-gradient(90deg, #ff4e7e, #ff8e53);
+            --btn-dark-2: linear-gradient(90deg, #4ecca3, #56ccf2);
+            --btn-dark-3: linear-gradient(90deg, #9575cd, #ba68c8);
+            --input-dark: rgba(255, 255, 255, 0.1);
+            --shadow-dark: rgba(0, 0, 0, 0.5);
+
+            /* Light Mode */
+            --bg-light: linear-gradient(135deg, #f0f2f5, #e2e4e9, #d5d8dc);
+            --container-light: rgba(255, 255, 255, 0.95);
+            --text-light: #333;
+            --accent-light: #e63946;
+            --btn-light-1: linear-gradient(90deg, #e63946, #f4a261);
+            --btn-light-2: linear-gradient(90deg, #2a9d8f, #48cae4);
+            --btn-light-3: linear-gradient(90deg, #7b61a3, #9c27b0);
+            --input-light: rgba(0, 0, 0, 0.05);
+            --shadow-light: rgba(0, 0, 0, 0.2);
+        }
+
         body {
-            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: var(--dark);
-            color: var(--text);
-            line-height: 1.6;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-        
-        /* Header with left logo */
-        .magic-header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            padding: 0.8rem 1rem;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
             display: flex;
+            justify-content: center;
             align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            transition: all 0.5s ease;
         }
-        
-        .header-logo {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
+
+        body.dark {
+            background: var(--bg-dark);
+            color: var(--text-dark);
         }
-        
-        .logo-img {
-            height: 30px;
-            margin-right: 10px;
+
+        body.light {
+            background: var(--bg-light);
+            color: var(--text-light);
         }
-        
-        .logo-text {
-            font-size: 1.3rem;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            background: linear-gradient(to right, #fff 20%, var(--accent) 40%, var(--accent) 60%, #fff 80%);
-            background-size: 200% auto;
-            color: #000;
-            background-clip: text;
-            -webkit-background-clip: text;
-            text-fill-color: transparent;
-            -webkit-text-fill-color: transparent;
-            animation: shine 3s linear infinite;
-        }
-        
-        /* Secure iframe container */
-        .secure-video-container {
+
+        #container {
+            backdrop-filter: blur(12px);
+            border-radius: 25px;
+            padding: 40px;
+            width: 100%;
+            max-width: 750px;
+            box-shadow: 0 15px 40px var(--shadow-dark);
+            animation: slideIn 0.6s ease-out;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
-            width: 100%;
-            padding-top: 56.25%;
-            overflow: hidden;
-            background: #000;
         }
-        
-        .secure-video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        
-        /* Content section */
-        .content-section {
-            padding: 1rem;
-            background: rgba(15, 23, 42, 0.9);
-            margin: 0.75rem;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        
-        .content-section h2 {
-            color: var(--accent);
-            font-size: 1rem;
+
+        body.dark #container { background: var(--container-dark); }
+        body.light #container { background: var(--container-light); box-shadow: 0 15px 40px var(--shadow-light); }
+
+        h2 {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
             font-weight: 700;
-            margin-bottom: 0.6rem;
         }
-        
-        .content-section p {
-            font-size: 0.8rem;
+
+        body.dark h2 { color: var(--accent-dark); text-shadow: 0 2px 10px rgba(255, 78, 126, 0.3); }
+        body.light h2 { color: var(--accent-light); text-shadow: 0 2px 5px rgba(230, 57, 70, 0.2); }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            transition: all 0.4s ease;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+            font-weight: 500;
+            /* Allow text selection in input */
+            user-select: text;
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+        }
+
+        body.dark input { background: var(--input-dark); color: var(--text-dark); }
+        body.light input { background: var(--input-light); color: var(--text-light); }
+
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 15px rgba(255, 78, 126, 0.4);
+        }
+
+        body.dark input:focus { background: rgba(255, 255, 255, 0.18); }
+        body.light input:focus { background: rgba(0, 0, 0, 0.1); }
+
+        input::placeholder {
+            font-style: italic;
             font-weight: 400;
-            margin-bottom: 0.6rem;
+        }
+
+        body.dark input::placeholder { color: rgba(255, 255, 255, 0.5); }
+        body.light input::placeholder { color: rgba(0, 0, 0, 0.5); }
+
+        .input-paste-btn {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        body.dark .input-paste-btn { background: var(--btn-dark-3); color: #fff; }
+        body.light .input-paste-btn { background: var(--btn-light-3); color: #fff; }
+
+        body.dark .input-paste-btn:hover {
+            background: linear-gradient(90deg, #a188d6, #c986d3);
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(149, 117, 205, 0.5);
+        }
+
+        body.light .input-paste-btn:hover {
+            background: linear-gradient(90deg, #8e73b8, #b039c2);
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(123, 97, 163, 0.4);
+        }
+
+        .toggle-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        body.dark .toggle-btn { background: rgba(255, 255, 255, 0.1); color: var(--text-dark); }
+        body.light .toggle-btn { background: rgba(0, 0, 0, 0.05); color: var(--text-light); }
+
+        .toggle-btn.active {
+            box-shadow: 0 5px 15px rgba(255, 78, 126, 0.4);
+        }
+
+        body.dark .toggle-btn.active { background: var(--accent-dark); }
+        body.light .toggle-btn.active { background: var(--accent-light); }
+
+        body.dark .toggle-btn:hover:not(.active) { background: rgba(255, 255, 255, 0.2); }
+        body.light .toggle-btn:hover:not(.active) { background: rgba(0, 0, 0, 0.1); }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        body.dark #generateBtn { background: var(--btn-dark-1); color: #fff; }
+        body.light #generateBtn { background: var(--btn-light-1); color: #fff; }
+
+        body.dark #generateBtn:hover {
+            background: linear-gradient(90deg, #ff6b95, #ffa07a);
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(255, 78, 126, 0.5);
+        }
+
+        body.light #generateBtn:hover {
+            background: linear-gradient(90deg, #f25c68, #ffb27d);
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(230, 57, 70, 0.4);
+        }
+
+        body.dark #copyBtn { background: var(--btn-dark-2); color: #fff; }
+        body.light #copyBtn { background: var(--btn-light-2); color: #fff; }
+
+        body.dark #copyBtn:hover {
+            background: linear-gradient(90deg, #65d9b0, #70d6f7);
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(78, 204, 163, 0.5);
+        }
+
+        body.light #copyBtn:hover {
+            background: linear-gradient(90deg, #3ab0a2, #61d4f0);
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(42, 157, 143, 0.4);
+        }
+
+        body.dark #pasteBtn { background: var(--btn-dark-3); color: #fff; }
+        body.light #pasteBtn { background: var(--btn-light-3); color: #fff; }
+
+        body.dark #pasteBtn:hover {
+            background: linear-gradient(90deg, #a188d6, #c986d3);
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(149, 117, 205, 0.5);
+        }
+
+        body.light #pasteBtn:hover {
+            background: linear-gradient(90deg, #8e73b8, #b039c2);
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(123, 97, 163, 0.4);
+        }
+
+        textarea {
+            width: 100%;
+            height: 320px;
+            padding: 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            resize: none;
+            font-family: 'Fira Code', monospace;
+            transition: all 0.4s ease;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
             line-height: 1.5;
+            /* Allow text selection in textarea */
+            user-select: text;
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
         }
-        
-        /* Footer */
-        .magic-footer {
-            background: linear-gradient(135deg, var(--dark), #1e293b);
-            padding: 1rem;
-            text-align: center;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+        body.dark textarea { background: var(--input-dark); color: var(--text-dark); }
+        body.light textarea { background: var(--input-light); color: var(--text-light); }
+
+        textarea:focus {
+            outline: none;
+            box-shadow: 0 0 15px rgba(255, 78, 126, 0.4);
         }
-        
-        .copyright {
-            font-size: 0.7rem;
-            opacity: 0.6;
-            font-weight: 400;
+
+        body.dark textarea:focus { background: rgba(255, 255, 255, 0.15); }
+        body.light textarea:focus { background: rgba(0, 0, 0, 0.1); }
+
+        #modeToggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
         }
-        
-        /* Animations */
-        @keyframes shine {
-            to { background-position: 200% center; }
+
+        body.dark #modeToggle:hover { background: rgba(255, 255, 255, 0.3); }
+        body.light #modeToggle:hover { background: rgba(0, 0, 0, 0.1); }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        
-        /* Mobile optimizations */
+
+        @media (max-width: 768px) {
+            #container { padding: 30px; margin: 15px; }
+            h2 { font-size: 1.8rem; }
+            .toggle-group, .button-group { flex-direction: column; gap: 10px; }
+            textarea { height: 280px; }
+            .input-group { flex-direction: column; }
+            .input-paste-btn { width: 100%; }
+        }
+
         @media (max-width: 480px) {
-            .logo-text {
-                font-size: 1.1rem;
-            }
-            
-            .logo-img {
-                height: 25px;
-            }
-            
-            .content-section {
-                padding: 0.8rem;
-                margin: 0.5rem;
-            }
-            
-            .content-section h2 {
-                font-size: 0.95rem;
-            }
-            
-            .content-section p {
-                font-size: 0.78rem;
-            }
+            h2 { font-size: 1.4rem; }
+            input, button, textarea, .toggle-btn, .input-paste-btn { font-size: 0.95rem; }
+            #container { padding: 20px; }
+            #modeToggle { width: 35px; height: 35px; font-size: 1rem; }
         }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400&display=swap" rel="stylesheet">
 </head>
-<body>
-    <!-- Header with left logo -->
-    <header class="magic-header">
-        <a href="#" class="header-logo">
-            <!-- Replace with your logo -->
-            <img src="logo.png" alt="Logo" class="logo-img">
-            <div class="logo-text">MagicTV</div>
-        </a>
-    </header>
-    
-    <!-- Secure iframe container -->
-    <div class="secure-video-container">
-        <!-- Secured iframe with strict sandboxing -->
-        <iframe src="https://userrr4591.ifrem.net/iframe/frame.php" 
-                frameborder="0"
-                sandbox="allow-same-origin allow-scripts"
-                allowfullscreen
-                id="secureFrame"></iframe>
-    </div>
-    
-    <!-- Content section -->
-    <div class="content-section">
-        <h2>Live Streaming</h2>
-        <p>Enjoy our premium live stream with complete security. All external links are disabled for your protection.</p>
-    </div>
-    
-    <!-- Footer -->
-    <footer class="magic-footer">
-        <div class="copyright">
-            &copy; 2023 Secure Stream. All rights reserved.
+<body class="dark" oncontextmenu="return false;">
+    <div id="container">
+        <h2>Movie & Series Post Generator</h2>
+        <div class="input-group">
+            <input type="text" id="tmdbId" placeholder="Enter TMDB Movie ID">
+            <button class="input-paste-btn" onclick="pasteTMDBId()">Paste</button>
         </div>
-    </footer>
+        <div class="toggle-group">
+            <button class="toggle-btn active" id="movieToggle" onclick="toggleType('movie')">Movie</button>
+            <button class="toggle-btn" id="seriesToggle" onclick="toggleType('series')">Series</button>
+        </div>
+        <div class="button-group">
+            <button id="generateBtn" onclick="generateHTML()">Generate HTML</button>
+            <button id="copyBtn" onclick="copyToClipboard()">Copy Code</button>
+        </div>
+        <textarea id="outputHTML" placeholder="Generated HTML will appear here..."></textarea>
+    </div>
 
-    <!-- Security scripts without window.open override -->
     <script>
-        // Strict iframe security
-        document.getElementById('secureFrame').addEventListener('load', function() {
-            // Block all links within iframe
+        // Disable right-click
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // Disable common developer tools shortcuts (F12, Ctrl+Shift+I, Ctrl+U)
+        document.addEventListener('keydown', function(event) {
+            if (event.keyCode == 123) { // F12
+                event.preventDefault();
+                alert('Access to developer tools is disabled.');
+                return false;
+            }
+            if (event.ctrlKey && event.shiftKey && event.keyCode == 73) { // Ctrl+Shift+I
+                event.preventDefault();
+                alert('Access to developer tools is disabled.');
+                return false;
+            }
+            if (event.ctrlKey && event.keyCode == 85) { // Ctrl+U (View Source)
+                event.preventDefault();
+                alert('Viewing source code is disabled.');
+                return false;
+            }
+        });
+
+        // Detect if developer tools are opened
+        function detectDevTools() {
+            const threshold = 160;
+            const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+            const heightThreshold = window.outerHeight - window.innerHeight > threshold;
+            if (widthThreshold || heightThreshold) {
+                alert('Developer tools detected! Please close them to continue.');
+                // Optionally, redirect or disable functionality
+                // window.location.href = "about:blank"; // Uncomment to redirect
+            }
+        }
+
+        // Check for dev tools periodically
+        setInterval(detectDevTools, 1000);
+
+        const apiKey = "bef32038953bef7647b4a5862532fe95";
+        let contentType = "movie";
+
+        function toggleType(type) {
+            contentType = type;
+            document.getElementById("movieToggle").classList.toggle("active", type === "movie");
+            document.getElementById("seriesToggle").classList.toggle("active", type === "series");
+            document.getElementById("tmdbId").placeholder = `Enter TMDB ${type === "movie" ? "Movie" : "Series"} ID`;
+        }
+
+        function toggleMode() {
+            document.body.classList.toggle("dark");
+            document.body.classList.toggle("light");
+            document.getElementById("modeToggle").textContent = document.body.classList.contains("dark") ? "🌙" : "☀️";
+        }
+
+        async function generateHTML() {
+            const tmdbId = document.getElementById("tmdbId").value.trim();
+            if (!tmdbId) {
+                alert("Please enter a valid TMDB ID");
+                return;
+            }
+
+            const apiUrl = contentType === "movie"
+                ? `https://api.themoviedb.org/3/movie/${tmdbId}?api_key=${apiKey}&append_to_response=videos,credits`
+                : `https://api.themoviedb.org/3/tv/${tmdbId}?api_key=${apiKey}&append_to_response=credits`;
+
             try {
-                var iframeDoc = this.contentDocument || this.contentWindow.document;
-                iframeDoc.addEventListener('click', function(e) {
-                    if (e.target.tagName === 'A' || e.target.closest('a')) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        return false;
-                    }
-                }, true);
-                
-                // Prevent any form submissions
-                iframeDoc.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    return false;
-                }, true);
-            } catch(e) {
-                // Cross-origin error handling
-                console.log('Security policies active');
-            }
-        });
+                const response = await fetch(apiUrl);
+                const data = await response.json();
 
-        // Prevent navigation
-        window.addEventListener('beforeunload', function(e) {
-            // Only prevent if not initiated by user
-            if (!e.defaultPrevented && e.type === 'beforeunload') {
-                e.preventDefault();
-                e.returnValue = '';
-            }
-        });
+                if (!data.name && !data.title) {
+                    alert("Invalid TMDB ID. Try again.");
+                    return;
+                }
 
-        // Block frame busting
-        if (window.top !== window.self) {
-            window.top.location = window.self.location;
+                if (contentType === "movie") {
+                    const title = data.title;
+                    const year = data.release_date ? data.release_date.split("-")[0] : "Unknown";
+                    const rating = data.vote_average ? data.vote_average.toFixed(1) : "N/A";
+                    const duration = data.runtime ? `${Math.floor(data.runtime / 60)}h ${data.runtime % 60}m` : "Unknown";
+                    const genres = data.genres.length ? data.genres.map(g => g.name).join(", ") : "N/A";
+                    const director = data.credits.crew.find(person => person.job === "Director")?.name || "Unknown";
+                    const cast = data.credits.cast.slice(0, 5).map(actor => `<a href="https://www.themoviedb.org/person/${actor.id}">${actor.name}</a>`).join(", ") || "N/A";
+                    const posterUrl = data.poster_path ? `https://image.tmdb.org/t/p/w220_and_h330_face${data.poster_path}` : "https://via.placeholder.com/220x330?text=No+Image";
+                    const story = data.overview || "No storyline available.";
+                    const trailer = data.videos?.results.find(video => video.type === "Trailer");
+                    let trailerLink = "https://thegdplayer.blogspot.com/?player=plyr&provider=yt&link=";
+                    trailerLink += trailer ? trailer.key : "dQw4w9WgXcQ";
+
+                    const movieHTML = `
+<div class="separator" style="clear: both;">
+    <a href="https://www.themoviedb.org/movie/${tmdbId}" style="display: block; padding: 1em 0px; text-align: center;">
+        <img alt="${title} (${year})" border="0" loading="lazy" src="${posterUrl}" />
+    </a>
+</div>
+
+<span class="hcl">
+    <b>{year}=${year}</b> <b>{rating}=${rating}</b> <b>{type}=Movie</b> <b>{khdub}</b>
+</span>
+
+<div id="player-one">
+    <script>
+        var movie = { src: "${trailerLink}" };
+    <\/script>
+</div>
+
+<br />
+<div class="m-tabs">
+<ul class="b-tabs">
+    <li>Info</li>
+    <li>Story Line</li>
+    <li>Download</li>
+</ul>
+<div class="c-tabs">
+<div class="s-tabs">
+<div class="boxInfo">
+<div class="box-i">
+    <span><b>● Title:</b> ${title}</span>
+    <span><b>● Duration:</b> ${duration}</span>
+    <span><b>● Year:</b> ${year}</span>
+    <span><b>● Genre:</b> ${genres}</span>
+    <span><b>● Lead Cast:</b> ${cast}</span>
+    <span><b>● Rating:</b> ⭐${rating}</span>
+    <span><b>● Director:</b> ${director}</span>
+    <span><b>● Type:</b> Movie</span>
+</div>
+</div>
+</div>
+<div class="s-tabs">
+    <p class="dexs">${story}</p>
+</div>
+<div class="s-tabs">
+    <div class="download-container">
+        <a class="download-button" href="https://smallshorts.com/480p">Download 480p</a>
+        <a class="download-button" href="https://smallshorts.com/720p">Download 720p</a>
+        <a class="download-button" href="https://smallshorts.com/1080p">Download 1080p</a>
+    </div>
+</div>
+</div>
+</div>`;
+                    document.getElementById("outputHTML").value = movieHTML;
+                } else {
+                    const title = data.name;
+                    const year = data.first_air_date ? data.first_air_date.split("-")[0] : "Unknown";
+                    const rating = data.vote_average ? data.vote_average.toFixed(1) : "N/A";
+                    const genres = data.genres.length ? data.genres.map(g => g.name).join(", ") : "N/A";
+                    const cast = data.credits.cast.slice(0, 5).map(actor => `<a href="https://www.themoviedb.org/person/${actor.id}">${actor.name}</a>`).join(", ") || "N/A";
+                    const posterUrl = data.poster_path ? `https://image.tmdb.org/t/p/original${data.poster_path}` : "https://via.placeholder.com/533x800?text=No+Image";
+                    const story = data.overview || "No storyline available.";
+                    const seasons = data.number_of_seasons || "Unknown";
+                    const episodes = data.number_of_episodes || "Unknown";
+                    const status = data.status === "Ended" ? "" : "<b>{ongoing}</b>";
+
+                    const seriesHTML = `
+<div class="separator" style="clear: both;">
+    <a href="https://image.tmdb.org/t/p/original${data.poster_path}" style="display: block; padding: 1em 0; text-align: center;">
+        <img alt="${title}" border="0" data-original-height="800" data-original-width="533" src="${posterUrl}" loading="lazy" />
+    </a>
+</div>
+
+<span class="hcl">
+    <b>{speak}=khmer</b> <b>{episode}=EP.1</b> <b>{type}=Drama</b> ${status}
+</span>
+
+<div id="playlist-two"></div>
+<script>
+    playlists = [ {src: "Embeded link of episode"} ]
+<\/script>
+
+<br />
+<div class="m-tabs">
+<ul class="b-tabs">
+    <li>Info</li>
+    <li>Story Line</li>
+    <li>Download</li>
+</ul>
+<div class="c-tabs">
+<div class="s-tabs">
+<div class="boxInfo">
+<div class="box-i">
+    <span><b>● Title:</b> ${title}</span>
+    <span><b>● Duration:</b> Not Available</span>
+    <span><b>● Year:</b> ${year}</span>
+    <span><b>● Genre:</b> ${genres}</span>
+    <span><b>● Lead Cast:</b> ${cast}</span>
+    <span><b>● Rating:</b> ⭐${rating}</span>
+    <span><b>● Director:</b> Not Available</span>
+    <span><b>● Type:</b> Series</span>
+    <span><b>● Seasons:</b> ${seasons}</span>
+    <span><b>● Total Episodes:</b> ${episodes}</span>
+</div>
+</div>
+</div>
+<div class="s-tabs">
+    <p class="dexs">${story}</p>
+</div>
+<div class="s-tabs">
+    <h2 style="text-align:center">Season 1</h2>
+    <div class="download-container">
+        <a class="download-button" href="#link-480p">Episode 1</a>
+        <a class="download-button" href="#link-720p">Episode 2</a>
+        <a class="download-button" href="#link-1080p">Episode 3</a>
+    </div>
+</div>
+</div>
+</div>`;
+                    document.getElementById("outputHTML").value = seriesHTML;
+                }
+            } catch (error) {
+                alert("Error fetching details. Please try again.");
+                console.error(error);
+            }
+        }
+
+        function copyToClipboard() {
+            const textarea = document.getElementById("outputHTML");
+            textarea.select();
+            document.execCommand("copy");
+            alert("Code copied to clipboard!");
+        }
+
+        async function pasteFromClipboard() {
+            try {
+                const text = await navigator.clipboard.readText();
+                const textarea = document.getElementById("outputHTML");
+                textarea.value = text;
+                textarea.readOnly = false;
+                alert("Code pasted from clipboard!");
+            } catch (error) {
+                alert("Failed to paste from clipboard. Please try manually pasting with Ctrl+V.");
+                console.error(error);
+            }
+        }
+
+        async function pasteTMDBId() {
+            try {
+                const text = await navigator.clipboard.readText();
+                const input = document.getElementById("tmdbId");
+                input.value = text.trim();
+                alert("TMDB ID pasted!");
+            } catch (error) {
+                alert("Failed to paste TMDB ID. Please try manually pasting with Ctrl+V.");
+                console.error(error);
+            }
         }
     </script>
 </body>
