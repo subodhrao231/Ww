@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live IPL Match Streaming</title>
+    <title>Live IPL Match Streaming | HD Quality</title>
+    <meta name="description" content="Watch today's IPL match live in HD quality. Free streaming with multiple backup options.">
     <style>
         :root {
             --primary-color: #4285f4;
@@ -67,17 +68,39 @@
             margin-bottom: 2rem;
         }
         
-        .video-container iframe,
-        .video-container video {
+        #videoPlayer {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            border: none;
+            outline: none;
         }
         
-        /* Fallback video player styles */
+        .player-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .control-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .control-btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        /* Fallback options */
         .fallback-player {
             display: none;
             width: 100%;
@@ -85,6 +108,30 @@
             color: white;
             text-align: center;
             padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .fallback-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .fallback-btn {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .fallback-btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
         }
         
         .video-info {
@@ -93,6 +140,45 @@
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             margin-bottom: 2rem;
+        }
+        
+        .quality-options {
+            margin-top: 15px;
+        }
+        
+        .quality-btn {
+            background: #f1f1f1;
+            border: 1px solid #ddd;
+            padding: 5px 10px;
+            margin-right: 5px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        .quality-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        /* Loading spinner */
+        .loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+        
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
         
         footer {
@@ -141,7 +227,7 @@
             font-weight: 500;
         }
         
-        /* Follow modal */
+        /* Modal styles */
         .modal {
             display: none;
             position: fixed;
@@ -195,26 +281,6 @@
             background: var(--secondary-color);
         }
         
-        /* Loading spinner */
-        .loader {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid var(--primary-color);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            display: none;
-        }
-        
-        @keyframes spin {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-        
         @media (max-width: 768px) {
             h1 {
                 font-size: 1.8rem;
@@ -240,13 +306,17 @@
             .social-icon {
                 font-size: 1.8rem;
             }
+            
+            .player-controls {
+                flex-wrap: wrap;
+            }
         }
     </style>
 </head>
 <body>
     <header>
         <h1>Today's IPL Match Live</h1>
-        <p class="subtitle">Streaming provided by Kuldeep Rai | Contact: 9555158536</p>
+        <p class="subtitle">HD Streaming Provided by Kuldeep Rai | Contact: 9555158536</p>
     </header>
     
     <div class="container">
@@ -254,56 +324,58 @@
             <!-- Loading spinner -->
             <div class="loader" id="loader"></div>
             
-            <!-- Primary video embed with multiple fallback options -->
-            <iframe id="mainVideo" src="https://cors-proxy.cooks.fyi/41.205.93.154/STARSPORTS1/tracks-v1a1/mono.m3u8" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen
-                    onerror="fallbackToAlternative()"></iframe>
+            <!-- Main video player -->
+            <video id="videoPlayer" controls></video>
             
-            <!-- Fallback video player -->
-            <div id="fallbackPlayer" class="fallback-player">
-                <h3>Alternative Streaming Options</h3>
-                <p>If the video doesn't load, please try one of these options:</p>
-                <div style="margin: 20px 0;">
-                    <a href="https://cors-proxy.cooks.fyi/41.205.93.154/STARSPORTS1/tracks-v1a1/mono.m3u8" style="display: inline-block; background: var(--primary-color); color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; margin: 5px;">
-                        Open in External Player
-                    </a>
-                    <a href="https://cors-proxy.cooks.fyi/41.205.93.154/STARSPORTS1/tracks-v1a1/mono.m3u8" style="display: inline-block; background: var(--secondary-color); color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; margin: 5px;">
-                        Try Native Player
-                    </a>
-                </div>
-                <p>For best experience, use Chrome or Firefox browser</p>
-            </div>
+            
+        </div>
+        
+        <div class="player-controls">
+            <button class="control-btn" id="fullscreenBtn">
+                <i class="fas fa-expand"></i> Fullscreen
+            </button>
+            <button class="control-btn" id="refreshBtn">
+                <i class="fas fa-sync-alt"></i> Refresh Stream
+            </button>
         </div>
         
         <div class="video-info">
             <h2>About This Stream</h2>
-            <p>Watch today's IPL match live with high-quality streaming. If you experience any issues, try refreshing the page or using a different browser.</p>
-            <p>For optimal performance on Android devices:</p>
+            <p>Watch today's IPL match live with high-quality streaming directly from Star Sports broadcast.</p>
+            
+            <div class="quality-options" id="qualityOptions" style="display: none;">
+                <strong>Quality:</strong>
+                <button class="quality-btn" data-quality="auto">Auto</button>
+                <button class="quality-btn" data-quality="720">720p</button>
+                <button class="quality-btn" data-quality="480">480p</button>
+                <button class="quality-btn" data-quality="360">360p</button>
+            </div>
+            
+            <p style="margin-top: 15px;"><strong>Tips for best experience:</strong></p>
             <ul style="margin: 10px 0 10px 20px;">
-                <li>Use Chrome or Firefox browser</li>
-                <li>Ensure you have a stable internet connection</li>
-                <li>Disable any ad-blockers if the stream doesn't load</li>
+                <li>Use Chrome/Firefox for best performance</li>
+                <li>Disable ad-blockers if stream doesn't load</li>
+                <li>Refresh if stream buffers excessively</li>
+                <li>Minimum 5Mbps connection recommended for HD</li>
             </ul>
         </div>
     </div>
     
     <footer>
         <div class="footer-content">
-            <p>&copy; 2025 IPL Live Streaming. All rights reserved.</p>
+            <p>&copy; 2023 IPL Live Streaming. Not affiliated with IPL or BCCI.</p>
             <div class="social-links">
                 <a href="#" class="social-link" onclick="showFollowModal('Instagram', 'https://www.instagram.com/itz_kuldeep_rai_007/')">
                     <i class="fab fa-instagram social-icon"></i>
-                    <span class="social-text">Follow Us</span>
+                    <span class="social-text">Instagram</span>
                 </a>
                 <a href="#" class="social-link" onclick="showFollowModal('Facebook', 'https://www.facebook.com/profile.php?id=100088420601404')">
                     <i class="fab fa-facebook social-icon"></i>
-                    <span class="social-text">Like Our Page</span>
+                    <span class="social-text">Facebook</span>
                 </a>
                 <a href="#" class="social-link" onclick="showFollowModal('YouTube', 'https://www.youtube.com/@StreamFlixPro?sub_confirmation=1')">
                     <i class="fab fa-youtube social-icon"></i>
-                    <span class="social-text">Subscribe</span>
+                    <span class="social-text">YouTube</span>
                 </a>
             </div>
         </div>
@@ -313,9 +385,11 @@
     <div class="modal" id="followModal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeModal()">&times;</span>
-            <h3 class="modal-title" id="modalTitle">Follow Us on Instagram</h3>
-            <p>Please follow/subscribe to our channel for more live matches and updates!</p>
-            <a href="#" class="modal-btn" id="modalLink" target="_blank">Continue to Platform</a>
+            <h3 class="modal-title" id="modalTitle">Follow Us</h3>
+            <p id="modalDescription">Follow our page for more live matches and updates!</p>
+            <a href="#" class="modal-btn" id="modalLink" target="_blank">
+                <i class="fab fa-instagram"></i> Continue
+            </a>
             <p style="margin-top: 1rem; font-size: 0.9rem;">You'll be redirected to our official page</p>
         </div>
     </div>
@@ -323,53 +397,187 @@
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
+    <!-- HLS.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    
     <script>
-        // Show loader when page loads
         document.addEventListener('DOMContentLoaded', function() {
             const loader = document.getElementById('loader');
-            loader.style.display = 'block';
+            const videoPlayer = document.getElementById('videoPlayer');
+            const fallbackPlayer = document.getElementById('fallbackPlayer');
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            const refreshBtn = document.getElementById('refreshBtn');
+            const qualityOptions = document.getElementById('qualityOptions');
             
-            // Check if iframe loaded successfully
-            document.getElementById('mainVideo').addEventListener('load', function() {
+            // Multiple stream sources as fallback
+            const streamSources = [
+                'https://cors-proxy.cooks.fyi/41.205.93.154/STARSPORTS1/tracks-v1a1/mono.m3u8',
+                'https://iptv-org.github.io/iptv/countries/in.m3u' // Example backup
+            ];
+            
+            let currentSourceIndex = 0;
+            let hls;
+            
+            // Initialize player
+            function initPlayer() {
+                loader.style.display = 'block';
+                videoPlayer.style.display = 'block';
+                fallbackPlayer.style.display = 'none';
+                qualityOptions.style.display = 'none';
+                
+                // Clear previous instance if exists
+                if (hls) {
+                    hls.destroy();
+                }
+                
+                // Try to play the stream
+                if (Hls.isSupported()) {
+                    hls = new Hls({
+                        maxBufferLength: 30,
+                        maxMaxBufferLength: 600,
+                        maxBufferSize: 60 * 1000 * 1000,
+                        maxBufferHole: 0.5,
+                    });
+                    
+                    hls.loadSource(streamSources[currentSourceIndex]);
+                    hls.attachMedia(videoPlayer);
+                    
+                    hls.on(Hls.Events.MANIFEST_PARSED, function(event, data) {
+                        loader.style.display = 'none';
+                        
+                        // Show quality options if multiple levels available
+                        if (data.levels && data.levels.length > 1) {
+                            qualityOptions.style.display = 'block';
+                        }
+                        
+                        videoPlayer.play().catch(e => {
+                            console.log("Autoplay prevented, showing controls");
+                            videoPlayer.controls = true;
+                        });
+                    });
+                    
+                    hls.on(Hls.Events.ERROR, function(event, data) {
+                        if (data.fatal) {
+                            switch(data.type) {
+                                case Hls.ErrorTypes.NETWORK_ERROR:
+                                    tryNextSource();
+                                    break;
+                                case Hls.ErrorTypes.MEDIA_ERROR:
+                                    hls.recoverMediaError();
+                                    break;
+                                default:
+                                    showFallback();
+                                    break;
+                            }
+                        }
+                    });
+                } else if (videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
+                    // For Safari which supports HLS natively
+                    videoPlayer.src = streamSources[currentSourceIndex];
+                    videoPlayer.addEventListener('loadedmetadata', function() {
+                        loader.style.display = 'none';
+                        videoPlayer.play().catch(e => {
+                            console.log("Autoplay prevented, showing controls");
+                            videoPlayer.controls = true;
+                        });
+                    });
+                    videoPlayer.addEventListener('error', function() {
+                        tryNextSource();
+                    });
+                } else {
+                    showFallback();
+                }
+            }
+            
+            // Try next available source
+            function tryNextSource() {
+                currentSourceIndex++;
+                if (currentSourceIndex < streamSources.length) {
+                    console.log("Trying backup source", currentSourceIndex);
+                    initPlayer();
+                } else {
+                    showFallback();
+                }
+            }
+            
+            // Show fallback options
+            function showFallback() {
                 loader.style.display = 'none';
+                videoPlayer.style.display = 'none';
+                fallbackPlayer.style.display = 'block';
+            }
+            
+            // Fullscreen button
+            fullscreenBtn.addEventListener('click', function() {
+                if (videoPlayer.requestFullscreen) {
+                    videoPlayer.requestFullscreen();
+                } else if (videoPlayer.webkitRequestFullscreen) {
+                    videoPlayer.webkitRequestFullscreen();
+                } else if (videoPlayer.msRequestFullscreen) {
+                    videoPlayer.msRequestFullscreen();
+                }
             });
+            
+            // Refresh button
+            refreshBtn.addEventListener('click', function() {
+                initPlayer();
+            });
+            
+            // Quality selector
+            document.querySelectorAll('.quality-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (!hls) return;
+                    
+                    document.querySelectorAll('.quality-btn').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    const quality = this.dataset.quality;
+                    if (quality === 'auto') {
+                        hls.currentLevel = -1;
+                    } else {
+                        const levels = hls.levels;
+                        for (let i = 0; i < levels.length; i++) {
+                            if (levels[i].height <= parseInt(quality)) {
+                                hls.currentLevel = i;
+                                break;
+                            }
+                        }
+                    }
+                });
+            });
+            
+            // Start with first source
+            initPlayer();
             
             // Fallback check after 8 seconds
             setTimeout(function() {
-                const iframe = document.getElementById('mainVideo');
-                // Very simple check - if iframe has no height, it probably didn't load
-                if (iframe.clientHeight === 0) {
-                    fallbackToAlternative();
+                if (videoPlayer.readyState === 0) {
+                    tryNextSource();
                 }
             }, 8000);
         });
         
-        function fallbackToAlternative() {
-            document.getElementById('mainVideo').style.display = 'none';
-            document.getElementById('fallbackPlayer').style.display = 'block';
-            document.getElementById('loader').style.display = 'none';
-        }
-        
-        // Follow modal functions
+        // Modal functions
         function showFollowModal(platform, url) {
             event.preventDefault();
             const modal = document.getElementById('followModal');
             const modalTitle = document.getElementById('modalTitle');
+            const modalDesc = document.getElementById('modalDescription');
             const modalLink = document.getElementById('modalLink');
+            const iconClass = platform === 'YouTube' ? 'fab fa-youtube' : 
+                            platform === 'Facebook' ? 'fab fa-facebook' : 'fab fa-instagram';
             
-            // Set modal content based on platform
-            modalTitle.textContent = `Follow Us on ${platform}`;
-            modalLink.textContent = platform === 'YouTube' ? 'Subscribe on YouTube' : `Follow on ${platform}`;
+            modalTitle.textContent = `Follow on ${platform}`;
+            modalDesc.textContent = platform === 'YouTube' ? 
+                'Subscribe to our channel for live match notifications!' : 
+                `Follow our ${platform} page for more live streams!`;
+            
+            modalLink.innerHTML = `<i class="${iconClass}"></i> ${platform === 'YouTube' ? 'Subscribe' : 'Follow'}`;
             modalLink.href = url;
             
-            // Show modal
             modal.style.display = 'flex';
-            
-            // Add click event to continue button
-            modalLink.addEventListener('click', function() {
-                // Track the click if needed
-                console.log(`User clicked to follow on ${platform}`);
-            });
         }
         
         function closeModal() {
@@ -383,11 +591,6 @@
                 closeModal();
             }
         });
-        
-        // Another fallback for very old browsers
-        if (!('Promise' in window)) {
-            fallbackToAlternative();
-        }
     </script>
 </body>
 </html>
